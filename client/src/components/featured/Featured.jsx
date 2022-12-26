@@ -1,12 +1,33 @@
-import { InfoOutlined, PlayArrow } from "@mui/icons-material";
 import "./featured.scss";
+import { InfoOutlined, PlayArrow } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Featured = ({ type }) => {
+  const [content, setContent] = useState({});
+
+  useEffect(() => {
+    const getRandomContent = async () => {
+      try {
+        const res = await axios.get(`/api/movies/random?type=${type}`, {
+          headers: {
+            token:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTkzNzlmMDMxYmRlZDcxOTE4NTJlZCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY3MjAzNzI5NCwiZXhwIjoxNjcyNDY5Mjk0fQ.d3Wn902bo0s90liTAudy9hcREw05BaicOy3qAD6X7gg",
+          },
+        });
+        setContent(res.data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getRandomContent();
+  }, [type]);
+
   return (
     <div className="featured">
       {type && (
         <div className="category">
-          <span>{type === "movie" ? "Movies" : "Series"}</span>
+          <span>{type === "movies" ? "Movies" : "Series"}</span>
           <select name="genre" id="genre">
             <option>Genre</option>
             <option value="adventure">Adventure</option>
@@ -25,21 +46,10 @@ const Featured = ({ type }) => {
           </select>
         </div>
       )}
-      <img
-        src="https://static.tnn.in/photo/msid-96224338,imgsize-84726,updatedat-1671013079203,width-200,height-200,resizemode-75/96224338.jpg"
-        alt=""
-      />
+      <img src={content.img} alt="" />
       <div className="info">
-        <img
-          src="https://lumiere-a.akamaihd.net/v1/images/pp_avatar_thewayofwater_logo_97_b382cbde.png"
-          alt=""
-        />
-        <span className="desc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure non
-          recusandae sunt voluptate, distinctio magnam velit odio architecto
-          suscipit molestiae pariatur est earum quod? Facere vero suscipit
-          cupiditate omnis deleniti.
-        </span>
+        <img src={content?.imgTitle} alt="" />
+        <span className="desc">{content?.desc}</span>
         <div className="buttons">
           <button className="play">
             <PlayArrow />

@@ -1,16 +1,21 @@
 import "./watch.scss";
 import { ArrowBackOutlined } from "@mui/icons-material";
-import trailer from "../../assets/trailer.mp4";
+import { useLocation, Link } from "react-router-dom";
 
 const Watch = () => {
+  const location = useLocation();
+  const movie = location.state?.movie;
+
   return (
     <div className="watch">
-      <div className="back">
-        <ArrowBackOutlined />
-        Home
-      </div>
+      <Link to="/">
+        <div className="back">
+          <ArrowBackOutlined />
+          Home
+        </div>
+      </Link>
       <video controls autoPlay loop>
-        <source src={trailer} />
+        <source src={movie?.video} />
       </video>
     </div>
   );
